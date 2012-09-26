@@ -32,7 +32,7 @@ def parse_result_node(the_node)
   city_state = ""
   
   unless city_state_node.nil?
-  	geo = GoogleGeocoder.geocode(city_state_node.content)
+    geo = GoogleGeocoder.geocode(city_state_node.content)
     city_state = "#{geo.city.nil? ? geo.district : geo.city}-#{geo.state}" unless geo.nil?
   end
 
@@ -59,8 +59,6 @@ for page_number in 1..115
   doc.css('div[@class="searchbg_white"]').each do |container|
     results << parse_result_node(container)
   end
-
-  
 end
 
 CSV.open("contacts.csv", "wb") do |csv|
