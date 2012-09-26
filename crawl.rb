@@ -20,13 +20,13 @@ def parse_result_node(the_node)
   company_name = the_node.css('div[@class="addressinfo"]//h2').first.content
  
   email_nodes = the_node.css('a[@class="email"]')
-  email_addresses = email_nodes.nil? ? "" : email_nodes.collect{|email_node| email_node.content}.join("; ")
+  email_addresses = email_nodes.nil? ? "" : email_nodes.collect { |email_node| email_node.content }.join("; ")
   
   website_nodes = the_node.css('a[@class="http"]')
-  websites_addresses = website_nodes.nil? ? "" : website_nodes.collect{|website| "http://" + website.content}.join("; ")
+  websites_addresses = website_nodes.nil? ? "" : website_nodes.collect { |website| "http://" + website.content }.join("; ")
 
   phone_nodes = the_node.css('div[@class="phone ar12grey"]')
-  phone_numbers = phone_nodes.nil? ? "" : phone_nodes.collect{|phone| phone.content}.join("; ")
+  phone_numbers = phone_nodes.nil? ? "" : phone_nodes.collect { |phone| phone.content }.join("; ")
 
   city_state_node = the_node.css('div[@class="address"]').first
   city_state = ""
@@ -36,7 +36,7 @@ def parse_result_node(the_node)
     city_state = "#{geo.city.nil? ? geo.district : geo.city}-#{geo.state}" unless geo.nil?
   end
 
-  categories = the_node.css('h6').css('a').collect{|category| category.content}.join("; ")
+  categories = the_node.css('h6').css('a').collect { |category| category.content }.join("; ")
   
   puts "Finished parsing #{company_name}..."
   
@@ -48,19 +48,15 @@ end
 
 results = Array.new
 
+css_classes = ['div[@class="searchbg_blue"]', 'div[@class="searchbg_white"]']
+
 for page_number in 1..115
   url_to_parse = "http://www.photosourcedirectory.com/search_results.php?txtSearch=production&optCountry=45&rowsPerPage=20&optSortBy=relevancy&page=#{page_number}"
   doc = Nokogiri::HTML(open(url_to_parse))
-
-  doc.css('div[@class="searchbg_blue"]').each do |container|
-    results << parse_result_node(container)
-  end
-
-  doc.css('div[@class="searchbg_white"]').each do |container|
-    results << parse_result_node(container)
-  end
-
   
+  css_classes.each do |css_class|
+  	doc.css(css_class).each { |container| results << parse_result_node(container) }
+  end
 end
 
 CSV.open("contacts.csv", "wb") do |csv|
