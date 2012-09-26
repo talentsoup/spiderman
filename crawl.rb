@@ -40,7 +40,7 @@ def parse_result_node(the_node)
   
   puts "Finished parsing #{company_name}..."
   
-  sleep(3)
+  sleep(1)
 
   [company_name, email_addresses, websites_addresses, phone_numbers, city_state, categories]
 end
@@ -51,6 +51,7 @@ results = Array.new
 css_classes = ['div[@class="searchbg_blue"]', 'div[@class="searchbg_white"]']
 
 for page_number in 1..115
+  puts "Page #{page_number}"
   url_to_parse = "http://www.photosourcedirectory.com/search_results.php?txtSearch=production&optCountry=45&rowsPerPage=20&optSortBy=relevancy&page=#{page_number}"
   doc = Nokogiri::HTML(open(url_to_parse))
   
