@@ -55,7 +55,7 @@ for page_number in 1..115
   doc = Nokogiri::HTML(open(url_to_parse))
   
   css_classes.each do |css_class|
-  	doc.css(css_class).each { |container| results << parse_result_node(container) }
+    doc.css(css_class).each { |container| results << parse_result_node(container) }
   end
 end
 
